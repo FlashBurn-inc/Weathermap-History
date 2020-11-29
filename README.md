@@ -4,6 +4,7 @@ This repo is just the web html to display the animated weathermap GIFs based on 
 
 Please follow the guide below, which will walk you through the shell scripts which create GIF animations of the weathermap daily.
 
+
 ---
 
 ## Prerequisites
@@ -17,24 +18,28 @@ Please follow the guide below, which will walk you through the shell scripts whi
 ##  How do I use this?
 
 **mkdir -p /opt/weathermap-history/history**
+
 **cd /opt/weathermap-history**
 
 **vi getweather.sh** (edit file path if wrong)
+
 script collects all existed maps from Weathermap output folder
-```
+```bash
 #!/bin/bash
 DATE=`date '+%y%m%d%H%M'`
 for map in $(ls -l /opt/librenms/html/plugins/Weathermap/output/ | grep png | awk '{print $9}' | awk -F\. '{print $1}');do
 cp /opt/librenms/html/plugins/Weathermap/output/$map.png /opt/weathermap-history/history/${map}_$DATE.png
 done
-
 ```
 **chmod +x getweather.sh**
 **chown librenms:librenms getweather.sh** (change to librenms user/group)
 
+
+
 **vi makeGIF.sh** (edit file path if wrong)
+
 script makes yesterday history gif files for all maps 
-```
+```bash
 #!/bin/bash
 
 DATE=$(date "+%Y-%m-%d" -d "yesterday")
@@ -56,9 +61,11 @@ rm /opt/weathermap-history/history/*
 **chown librenms:librenms makeGIF.sh** (change to librenms user/group)
 
 
+
 **vi makeGIF_today.sh** (edit file path if wrong)
+
 script makes temporary today history files for all maps 
-```
+```bash
 #!/bin/bash
 
 DATE=$(date "+%Y-%m-%d")
@@ -78,29 +85,32 @@ sed -i '14a\var arr = new Array('"${JS_ARRAY}"');\' $PATH_DIR/history/index.html
 **chown librenms:librenms makeGIF_today.sh** (change to librenms user/group)
 
 
+
 This sting will add a link to history maps to the submenu of the Weathermap plugin
+
 **vi /opt/librenms/html/plugins/Weathermap/Weathermap.php** (edit file path if wrong)
+
 and add string 
-```
+```php
 $submenu .= ' <li><a href="/plugins/' . self::$name . '/output/history/index.html' . '"><i class="fa fa-folder fa-fw fa-lg" aria-hidden="true"></i> '. History . '</a></li>';
 ```
 after these strings
-```
+```php
         //Create submenu
         $submenu = ' <ul class="dropdown-menu scrollable-menu">';
         $count = 0;
-        
 ```
+
 
 Open librenms cronjob
 
 **vi /etc/cron.d/librenms**
 
-(The first line will create PNGs at 5 minute intervals between 19:00 up to 23:55, change this to your busiest periods but i would keep up to a 5 hour period otherwise you end up with huge file sized GIFs)  
-(The second line creates the temporary GIF every hours during the day)
-(The third line creates the GIF at 3am, I would leave this because we explicitly set -d yesterday to compensate the date)
+- The first line will create PNGs at 5 minute intervals between 19:00 up to 23:55, change this to your busiest periods but i would keep up to a 5 hour period otherwise you end up with huge file sized GIFs
+- The second line creates the temporary GIF every hours during the day
+- The third line creates the GIF at 3am, I would leave this because we explicitly set -d yesterday to compensate the date
 
-```
+```bash
 # weathermap-history
 */5 19-23 * * * librenmswww /opt/weathermap-history/getweather.sh >> /dev/null 2>&1
 55 19-23 * * * librenmswww /opt/weathermap-history/makeGIF_today.sh >> /dev/null 2>&1
@@ -134,4 +144,6 @@ Try running ./getweather.sh manually it should copy the weathermap into /opt/wea
 ---
 
 ##  Acknowledgments
+- https://github.com/chasgames/Weathermap-History
 - https://github.com/CaptainCodeman/gif-player (MIT)
+
