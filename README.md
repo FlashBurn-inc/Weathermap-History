@@ -32,6 +32,7 @@ cp /opt/librenms/html/plugins/Weathermap/output/$map.png /opt/weathermap-history
 done
 ```
 **chmod +x getweather.sh**
+
 **chown librenms:librenms getweather.sh** (change to librenms user/group)
 
 
@@ -58,6 +59,7 @@ sed -i '14a\var arr = new Array('"${JS_ARRAY}"');\' $PATH_DIR/history/index.html
 rm /opt/weathermap-history/history/*
 ```
 **chmod +x makeGIF.sh**
+
 **chown librenms:librenms makeGIF.sh** (change to librenms user/group)
 
 
@@ -82,6 +84,7 @@ sed -i '15d' $PATH_DIR/history/index.html
 sed -i '14a\var arr = new Array('"${JS_ARRAY}"');\' $PATH_DIR/history/index.html
 ```
 **chmod +x makeGIF_today.sh**
+
 **chown librenms:librenms makeGIF_today.sh** (change to librenms user/group)
 
 
