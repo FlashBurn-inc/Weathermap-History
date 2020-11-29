@@ -21,6 +21,7 @@ mkdir -p /opt/weathermap-history/history
 cd /opt/weathermap-history
 
 vi getweather.sh (edit file path if wrong)
+
 script collects all existed maps from Weathermap output folder
 ```
 #!/bin/bash
@@ -31,9 +32,12 @@ done
 
 ```
 chmod +x getweather.sh
+
 chown librenms:librenms getweather.sh (change to librenms user/group)
 
+
 vi makeGIF.sh (edit file path if wrong)
+
 script makes yesterday history gif files for all maps 
 ```
 #!/bin/bash
@@ -54,9 +58,12 @@ sed -i '14a\var arr = new Array('"${JS_ARRAY}"');\' $PATH_DIR/history/index.html
 rm /opt/weathermap-history/history/*
 ```
 chmod +x makeGIF.sh
+
 chown librenms:librenms makeGIF.sh (change to librenms user/group)
 
+
 vi makeGIF_today.sh (edit file path if wrong)
+
 script makes temporary today history files for all maps 
 ```
 #!/bin/bash
@@ -75,10 +82,14 @@ sed -i '15d' $PATH_DIR/history/index.html
 sed -i '14a\var arr = new Array('"${JS_ARRAY}"');\' $PATH_DIR/history/index.html
 ```
 chmod +x makeGIF_today.sh
+
 chown librenms:librenms makeGIF_today.sh (change to librenms user/group)
 
+
 This sting will add a link to history maps to the submenu of the Weathermap plugin
+
 vi /opt/librenms/html/plugins/Weathermap/Weathermap.php (edit file path if wrong)
+
 and add string 
 ```
 $submenu .= ' <li><a href="/plugins/' . self::$name . '/output/history/index.html' . '"><i class="fa fa-folder fa-fw fa-lg" aria-hidden="true"></i> '. History . '</a></li>';
@@ -92,6 +103,7 @@ after these strings
 ```
 
 Open librenms cronjob
+
 vi /etc/cron.d/librenms
 
 (The first line will create PNGs at 5 minute intervals between 19:00 up to 23:55, change this to your busiest periods but i would keep up to a 5 hour period otherwise you end up with huge file sized GIFs)  
