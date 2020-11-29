@@ -16,12 +16,10 @@ Please follow the guide below, which will walk you through the shell scripts whi
 
 ##  How do I use this?
 
-mkdir -p /opt/weathermap-history/history
+**mkdir -p /opt/weathermap-history/history**
+**cd /opt/weathermap-history**
 
-cd /opt/weathermap-history
-
-vi getweather.sh (edit file path if wrong)
-
+**vi getweather.sh** (edit file path if wrong)
 script collects all existed maps from Weathermap output folder
 ```
 #!/bin/bash
@@ -31,13 +29,10 @@ cp /opt/librenms/html/plugins/Weathermap/output/$map.png /opt/weathermap-history
 done
 
 ```
-chmod +x getweather.sh
+**chmod +x getweather.sh**
+**chown librenms:librenms getweather.sh** (change to librenms user/group)
 
-chown librenms:librenms getweather.sh (change to librenms user/group)
-
-
-vi makeGIF.sh (edit file path if wrong)
-
+**vi makeGIF.sh** (edit file path if wrong)
 script makes yesterday history gif files for all maps 
 ```
 #!/bin/bash
@@ -57,13 +52,11 @@ sed -i '14a\var arr = new Array('"${JS_ARRAY}"');\' $PATH_DIR/history/index.html
 
 rm /opt/weathermap-history/history/*
 ```
-chmod +x makeGIF.sh
+**chmod +x makeGIF.sh**
+**chown librenms:librenms makeGIF.sh** (change to librenms user/group)
 
-chown librenms:librenms makeGIF.sh (change to librenms user/group)
 
-
-vi makeGIF_today.sh (edit file path if wrong)
-
+**vi makeGIF_today.sh** (edit file path if wrong)
 script makes temporary today history files for all maps 
 ```
 #!/bin/bash
@@ -81,15 +74,12 @@ JS_ARRAY=$(ls -l $PATH_DIR | grep png | awk '{print $9}' | awk -F\.png '{print "
 sed -i '15d' $PATH_DIR/history/index.html
 sed -i '14a\var arr = new Array('"${JS_ARRAY}"');\' $PATH_DIR/history/index.html
 ```
-chmod +x makeGIF_today.sh
-
-chown librenms:librenms makeGIF_today.sh (change to librenms user/group)
+**chmod +x makeGIF_today.sh**
+**chown librenms:librenms makeGIF_today.sh** (change to librenms user/group)
 
 
 This sting will add a link to history maps to the submenu of the Weathermap plugin
-
-vi /opt/librenms/html/plugins/Weathermap/Weathermap.php (edit file path if wrong)
-
+**vi /opt/librenms/html/plugins/Weathermap/Weathermap.php** (edit file path if wrong)
 and add string 
 ```
 $submenu .= ' <li><a href="/plugins/' . self::$name . '/output/history/index.html' . '"><i class="fa fa-folder fa-fw fa-lg" aria-hidden="true"></i> '. History . '</a></li>';
@@ -104,7 +94,7 @@ after these strings
 
 Open librenms cronjob
 
-vi /etc/cron.d/librenms
+**vi /etc/cron.d/librenms**
 
 (The first line will create PNGs at 5 minute intervals between 19:00 up to 23:55, change this to your busiest periods but i would keep up to a 5 hour period otherwise you end up with huge file sized GIFs)  
 (The second line creates the temporary GIF every hours during the day)
@@ -117,7 +107,7 @@ vi /etc/cron.d/librenms
 0 3 * * * librenmswww /opt/weathermap-history/makeGIF.sh >> /dev/null 2>&1
 ```
 
-cd /opt/librenms/html/plugins/Weathermap/output
+**cd /opt/librenms/html/plugins/Weathermap/output**
 
 
 Now clone the repo into the history folder like so
