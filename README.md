@@ -125,7 +125,7 @@ Open librenms cronjob
 
 Now clone the repo into the history folder like so
 ```
-git clone https://github.com/chasgames/Weathermap-History history
+https://github.com/FlashBurn-inc/Weathermap-History history
 ```
 
 In evening you should have the date folder and GIF created in this folder opt/librenms/html/plugins/Weathermap/output/history/
